@@ -9,12 +9,13 @@
       + Adicionar Nova Transação
     </button>
 
-		<button
-			@click="navegarParaRelatorios"
-			class="bg-green-500 hover:bg-green-600 transition duration-300 ease-in-out text-white py-3 px-6 rounded-lg font-semibold shadow-lg hover:shadow-xl"
-		>
-			+ Gerar relatórios
-		</button>
+    <button
+      @click="navegarParaRelatorios"
+      class="bg-green-500 hover:bg-green-600 transition duration-300 ease-in-out text-white py-3 px-6 rounded-lg font-semibold shadow-lg hover:shadow-xl"
+    >
+      + Gerar relatórios
+    </button>
+    
     <!-- Modal -->
     <div v-if="exibirModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
       <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-lg">
@@ -75,18 +76,15 @@
 
 <script>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'Transacoes',
   props: {
     token: String,
-		methods: {
-    navegarParaRelatorios() {
-      this.$router.push('/relatorios');
-    },
-  },
   },
   setup(props) {
+    const router = useRouter();
     const transacoes = ref([]);
     const exibirModal = ref(false);
     const modoFormulario = ref('adicionar');
@@ -225,7 +223,10 @@ export default {
         console.error('Erro ao excluir a transação:', error);
       }
     };
-		
+
+    const navegarParaRelatorios = () => {
+      router.push('/relatorios');
+    };
 
     return {
       transacoes,
@@ -237,7 +238,9 @@ export default {
       submitFormulario,
       editarTransacao,
       excluirTransacao,
+      navegarParaRelatorios,
     };
   },
 };
 </script>
+
