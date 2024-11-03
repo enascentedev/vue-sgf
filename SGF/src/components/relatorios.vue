@@ -10,7 +10,8 @@
         <input v-model="ano" type="number" placeholder="Ano" class="border p-2 rounded w-24" required />
         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Buscar</button>
       </form>
-      <table v-if="despesasPorCategoria.length" class="min-w-full bg-white">
+
+      <table v-if="despesasPorCategoria.length" class="min-w-full bg-white mb-4">
         <thead>
           <tr>
             <th class="py-2">Categoria</th>
@@ -24,6 +25,12 @@
           </tr>
         </tbody>
       </table>
+
+      <!-- Gráfico de Pizza para Despesas por Categoria -->
+			 <div class="h-96 flex justify-center items-center  ">
+				<PizzaChart v-if="despesasPorCategoria.length" :labels="despesasLabels" :dataValues="despesasValues" />
+			 </div>
+      
     </section>
 
     <!-- Relatório de Saldo de Contas -->
@@ -45,9 +52,13 @@
 
 <script>
 import { ref } from 'vue';
+import PizzaChart from './pizzaChart.vue';
 
 export default {
   name: 'Relatorios',
+  components: {
+    PizzaChart,
+  },
   props: {
     token: {
       type: String,
@@ -57,9 +68,11 @@ export default {
   setup(props) {
     const mes = ref('');
     const ano = ref('');
-
     const despesasPorCategoria = ref([]);
     const saldoContas = ref(null);
+
+    const despesasLabels = ref([]);
+    const despesasValues = ref([]);
 
     const headers = {
       'Content-Type': 'application/json',
@@ -74,6 +87,10 @@ export default {
         );
         const data = await response.json();
         despesasPorCategoria.value = data.data;
+
+        // Extrai labels e valores para o gráfico de pizza
+        despesasLabels.value = despesasPorCategoria.value.map((item) => item.categoria);
+        despesasValues.value = despesasPorCategoria.value.map((item) => Number(item.total));
       } catch (error) {
         console.error('Erro ao buscar despesas por categoria:', error);
       }
@@ -99,9 +116,9 @@ export default {
       saldoContas,
       fetchDespesasPorCategoria,
       fetchSaldoContas,
+      despesasLabels,
+      despesasValues,
     };
   },
 };
 </script>
-
-
