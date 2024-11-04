@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chart-container">
     <apexchart type="pie" :options="chartOptions" :series="series" />
   </div>
 </template>
@@ -22,12 +22,10 @@ export default {
       series: this.dataValues,
       chartOptions: {
         chart: {
-          width: 400, // Ajuste a largura aqui
-          height: 400, // Ajuste a altura aqui
           toolbar: {
-            show: true, // Mostra a toolbar
+            show: true, 
             tools: {
-              download: true, 
+              download: true,
               selection: false,
               zoom: false,
               zoomin: false,
@@ -36,9 +34,9 @@ export default {
               reset: false,
             },
             export: {
-              csv: false, // Oculta a opção de exportar como CSV
-              svg: true,  // Habilita a exportação como SVG
-              png: true,  // Habilita a exportação como PNG
+              csv: false,
+              svg: true,
+              png: true,
             },
           },
         },
@@ -48,7 +46,7 @@ export default {
             breakpoint: 480,
             options: {
               chart: {
-                width: 200,
+                width: 300,
               },
               legend: {
                 position: 'bottom',
@@ -61,3 +59,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.chart-container {
+  width: 500px; /* Defina a largura desejada */
+  height: 400px; /* Defina a altura desejada */
+  max-width: 100%;
+  margin: 0 auto;
+}
+</style>

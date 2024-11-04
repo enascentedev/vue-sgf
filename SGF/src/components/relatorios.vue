@@ -27,7 +27,7 @@
       </table>
 
       <!-- Gráfico de Pizza para Despesas por Categoria -->
-			 <div class="h-96 flex justify-center items-center  ">
+			 <div class=" flex justify-center items-center  ">
 				<PizzaChart v-if="despesasPorCategoria.length" :labels="despesasLabels" :dataValues="despesasValues" />
 			 </div>
       

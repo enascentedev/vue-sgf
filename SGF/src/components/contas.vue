@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen flex flex-col gap-5 p-5 md:p-10 bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 text-white">
     <h1 class="text-3xl font-extrabold mb-6 tracking-wide">Transações de Contas</h1>
-    
+
     <button
       @click="abrirFormulario('adicionar')"
       class="bg-green-500 hover:bg-green-600 transition duration-300 ease-in-out text-white py-3 px-6 rounded-lg font-semibold shadow-lg hover:shadow-xl"
@@ -15,12 +15,12 @@
     >
       + Gerar relatórios
     </button>
-    
+
     <!-- Modal -->
     <div v-if="exibirModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
       <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-lg">
         <h2 class="text-2xl font-bold mb-4">{{ modoFormulario === 'adicionar' ? 'Adicionar Nova Transação' : 'Editar Transação' }}</h2>
-        
+
         <form @submit.prevent="submitFormulario">
           <div class="mb-4">
             <label class="block text-gray-300 mb-2">Tipo de Transação:</label>
@@ -38,7 +38,14 @@
 
           <div class="mb-4">
             <label class="block text-gray-300 mb-2">Valor:</label>
-            <input v-model.number="formulario.valor" type="number" class="w-full p-3 rounded bg-gray-700 text-white placeholder-gray-400" placeholder="Valor" required />
+            <input
+              v-model="formulario.valor"
+              @input="formatarValor"
+              type="text"
+              class="w-full p-3 rounded bg-gray-700 text-white placeholder-gray-400"
+              placeholder="Valor (ex: 0,00)"
+              required
+            />
           </div>
 
           <div class="mb-4">
@@ -92,11 +99,17 @@ export default {
       id: null,
       tipo: 'Pagar',
       descricao: '',
-      valor: 0,
+      valor: '0,00', // Valor inicial com formato de moeda
       data: '',
       categoria: '',
       status: 'pendente',
     });
+
+    const formatarValor = () => {
+      let valor = formulario.value.valor.replace(/\D/g, ''); // Remove qualquer caractere que não seja número
+      valor = (parseInt(valor) / 100).toFixed(2); // Converte para decimal com duas casas
+      formulario.value.valor = valor.replace('.', ','); // Substitui ponto por vírgula
+    };
 
     onMounted(() => {
       carregarTransacoes();
@@ -143,7 +156,7 @@ export default {
           id: null,
           tipo: 'Pagar',
           descricao: '',
-          valor: 0,
+          valor: '0,00',
           data: '',
           categoria: '',
           status: 'pendente',
@@ -164,7 +177,7 @@ export default {
 
         const payload = {
           descricao: transacao.descricao,
-          valor: transacao.valor,
+          valor: parseFloat(transacao.valor.replace(',', '.')),
           ...(transacao.tipo === 'Pagar' ? { data_vencimento: transacao.data } : { data_recebimento: transacao.data }),
           categoria: transacao.categoria,
           status: transacao.status,
@@ -233,6 +246,7 @@ export default {
       exibirModal,
       modoFormulario,
       formulario,
+      formatarValor,
       abrirFormulario,
       fecharModal,
       submitFormulario,
@@ -243,4 +257,3 @@ export default {
   },
 };
 </script>
-
